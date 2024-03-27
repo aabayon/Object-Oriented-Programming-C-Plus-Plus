@@ -1,1 +1,139 @@
+//RPG.h//
+#ifndef RPG_H
+#define RPG_H
+#include <string>
 
+using namespace std;
+
+const int SKILL_SIZE = 2;
+
+class RPG {
+    public:
+        RPG();
+        RPG(string name, int health, int strength, int defense, string type);
+
+        void setSkills();
+        void printAction(string, RPG);
+        void updateHealth(int);
+        void attack(RPG *);
+        void useSkill(RPG *);
+
+        bool isAlive() const;
+        string getName() const;
+        int getHealth() const;
+        int getStrength() const;
+        int getDefense() const;
+
+    private:
+        string name;
+        int health;
+        int strength;
+        int defense; 
+        string type; // warrior, mage, thief, archer
+        string skills[SKILL_SIZE];
+
+};
+#endif 
+
+//RPG.cpp//
+#include <iostream>
+#include "RPG.h"
+#include <array>
+
+using namespace std;
+
+RPG::RPG(){
+    name = "NPC";
+    health = 100;
+    strength = 10; 
+    defense = 10; 
+    type = "warrior";
+    skills [0] = "slash";
+    skills [1] = "parry";
+}
+
+RPG::RPG(string name, int health, int strength, int defense, string type){
+    this->name = name;
+    this->health = health;
+    this->strength = strength;
+    this->defense = defense;
+    this->type = type; 
+
+    setSkills();
+}
+
+string RPG::getName() const{
+    return name;
+}
+int RPG::getHealth() const{
+    return health;
+}
+int RPG::getStrength() const{
+    return strength;
+}
+int RPG::getDefense() const{
+    return defense;
+}
+
+void RPG::setSkills() {
+    if (type == "mage"){
+        skills[0] = "fire";
+        skills[1] = "thunder";
+    } else if (type == "thief"){
+        skills[0] = "pilfer";
+        skills[1] = "jab";
+    } else if (type == "archer"){
+        skills[0] = "parry";
+        skills[1] = "crowbow_attack";
+    } else {
+        skills[0] = "slash";
+        skills[1] = "parry";
+    }
+}
+
+void RPG::printAction(string skill, RPG opponent) {
+    printf("%s used %s on %s\n", name.c_str(), skill.c_str(), opponent.getName().c_str());
+}
+
+void RPG::updateHealth(int new_health){
+    health = new_health;
+}
+
+bool RPG::isAlive() const{
+ if (health > 0){
+    return true;
+ }else{
+    return false;
+ }
+}
+
+//main.cpp//
+#include <iostream>
+#include "RPG.h"
+
+using namespace std;
+
+int main(){
+    RPG p1 = RPG("Wiz", 70, 45, 15, "mage");
+    RPG p2 = RPG("NPC",100, 10, 10, "warrior");
+
+    printf("%s Current stats:\n", p1.getName().c_str());
+    printf("Health: %i\t Strength: %i\t Defense: %i\n\n", p1.getHealth(), p1.getStrength(), p1.getDefense());
+
+    printf("%s Current stats:\n", p2.getName().c_str());
+    printf("Health: %i\t Strength: %i\t Defense: %i\n\n", p2.getHealth(), p2.getStrength(), p2.getDefense());
+
+    p1.updateHealth(0);
+    printf("Wiz New Health: %i\n\n");
+
+    p1.isAlive();
+    p2.isAlive();
+
+    if (p1.isAlive()){
+        printf("Alive\n");    
+    }else{
+        printf("Dead. Game Over.");
+    }
+
+    return 0;
+}
